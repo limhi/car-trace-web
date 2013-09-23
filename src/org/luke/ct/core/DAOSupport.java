@@ -8,9 +8,6 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-import org.luke.ct.api.CarTraceAPI;
-
-import com.alibaba.fastjson.JSON;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -31,13 +28,16 @@ public class DAOSupport<T> implements IDAO<T> {
   // 日誌對像
   private static final Logger log = Logger.getLogger(DAOSupport.class.getName());
 
+  @SuppressWarnings("unchecked")
   public DAOSupport() {
+    // 獲得當前T的類型
     this.entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
   }
 
   /**
    * 添加實體
    */
+
   public void add(T entity) {
     PersistenceManager pm = PMF.get().getPersistenceManager();
     try {
@@ -54,11 +54,13 @@ public class DAOSupport<T> implements IDAO<T> {
   /**
    * 刪除實體
    */
+
   public void delete(Key key) {
     PersistenceManager pm = PMF.get().getPersistenceManager();
     try {
       T delEntity = pm.getObjectById(entityClass, key);
       pm.deletePersistent(delEntity);
+      log.info("delete entity" + entityClass.getName());
     } catch (Exception e) {
       log.severe("刪除實體 " + entityClass.getName() + "時候出錯!");
       log.severe(e.getMessage());
@@ -70,12 +72,14 @@ public class DAOSupport<T> implements IDAO<T> {
   /**
    * 更新實體
    */
+
   public void modify(T entity) {
     PersistenceManager pm = PMF.get().getPersistenceManager();
     try {
       // 更新數據，直接調用makePersistent()方法的，要求實體類註解了如下
       // @PersistenceCapable(detachable="true")
       pm.makePersistent(entity);
+      log.info("modify entity" + entityClass.getName());
     } catch (Exception e) {
       log.severe("更新實體 " + entity.getClass().getName() + "時候出錯!");
       log.severe(e.getMessage());
@@ -115,7 +119,7 @@ public class DAOSupport<T> implements IDAO<T> {
         qr.setResultList(new ArrayList<T>());
         qr.setTotalRecord((long) 0);
       }
-
+      log.info("query entity" + entityClass.getName());
     } catch (Exception e) {
       log.severe("查詢時候出錯了！");
       log.severe(e.getMessage());
@@ -133,6 +137,7 @@ public class DAOSupport<T> implements IDAO<T> {
    * @return 查詢處理好的數據
    * @author kyle
    */
+
   public QueryResult<T> getPaginationData(String filter, String ordering) {
     long min = -1;
     return getPaginationData(filter, ordering, min, min);
@@ -149,6 +154,7 @@ public class DAOSupport<T> implements IDAO<T> {
    * @return 查詢處理好的數據
    * @author kyle
    */
+
   public QueryResult<T> getPaginationData(String filter, long firstResult, long maxResult) {
     return getPaginationData(filter, null, firstResult, maxResult);
   }
@@ -162,6 +168,7 @@ public class DAOSupport<T> implements IDAO<T> {
    * @return 查詢處理好的數據
    * @author kyle
    */
+
   public QueryResult<T> getPaginationData(long firstResult, long maxResult) {
     return getPaginationData(null, null, firstResult, maxResult);
   }
@@ -172,6 +179,7 @@ public class DAOSupport<T> implements IDAO<T> {
    * @return 查詢處理好的數據
    * @author kyle
    */
+
   public QueryResult<T> getPaginationData(String filter) {
     return getPaginationData(filter, null);
   }
@@ -180,16 +188,17 @@ public class DAOSupport<T> implements IDAO<T> {
    * @return 查詢處理好的數據
    * @author kyle
    */
+
   public QueryResult<T> getPaginationData() {
     return getPaginationData(null);
   }
 
-  @Override
   public T getDataByID(Key key) {
-    PersistenceManager pm = PMF.get().getPersistenceManager();    
+    PersistenceManager pm = PMF.get().getPersistenceManager();
     T entity = null;
     try {
       entity = (T) pm.getObjectById(entityClass, key);
+      log.info("query entity" + entityClass.getName());
     } catch (Exception e) {
       log.severe("查詢時候出錯了！");
       log.severe(e.getMessage());
@@ -199,37 +208,24 @@ public class DAOSupport<T> implements IDAO<T> {
     return entity;
   }
 
-  @Override
   public T getDataByID(String encodeKey) {
-    PersistenceManager pm = PMF.get().getPersistenceManager();
-    Key k = KeyFactory.stringToKey(encodeKey);
-    T entity = null;
     try {
-      entity = (T) pm.getObjectById(entityClass, k);
-    } catch (Exception e) {
-      log.severe("查詢時候出錯了！");
-      log.severe(e.getMessage());
-    } finally {
-      pm.close();
+      Key key = KeyFactory.stringToKey(encodeKey);
+      return getDataByID(key);
+    } catch (IllegalArgumentException e) {
+      log.severe("encodeKey不合法!error:" + e.getMessage());
+      return null;
     }
-    return entity;
   }
 
-  @Override
   public T getDataByID(Long key) {
-    PersistenceManager pm = PMF.get().getPersistenceManager();
-    Key k = KeyFactory.createKey(entityClass.getSimpleName(), key);
-    T entity = null;
     try {
-      entity = (T) pm.getObjectById(entityClass, k);
-    } catch (Exception e) {
-      log.severe("查詢時候出錯了！");
-      log.severe(e.getMessage());
-    } finally {
-      pm.close();
+      Key k = KeyFactory.createKey(entityClass.getSimpleName(), key);
+      return getDataByID(key);
+    } catch (IllegalArgumentException e) {
+      log.severe("Long Key不合法!error:" + e.getMessage());
+      return null;
     }
-    return entity;
   }
-  
-  
+
 }
