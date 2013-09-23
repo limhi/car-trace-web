@@ -11,7 +11,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 @PersistenceCapable(detachable = "true")
-public class CarReg {
+public class PhoneReg {
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
   @ApiSerializationProperty(ignored = AnnotationBoolean.TRUE)

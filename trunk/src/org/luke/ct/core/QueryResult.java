@@ -3,23 +3,23 @@ package org.luke.ct.core;
 import java.util.List;
 
 /**
- *查询结果封装类 query result class
+ *查詢結果封裝類 query result class
  * @since 2011/09/01 1.0
  * @version 1.0
  * @author kyle
  *
- * @param <T> 实体类 entity class
+ * @param <T> 實體類 entity class
  */
 
 public class QueryResult<T> {
-  // 查询结果记录query result record
+  // 查詢結果記錄query result record
   private List<T> resultList;
-  // 总记录数 total record  
+  // 總記錄數 total record  
   private long totalRecord;
   
   /**
-   * 获取所有满足条件的实体对象list
-   * @return list 所有满足条件的实体对象
+   * 獲取所有滿足條件的實體對像list
+   * @return list 所有滿足條件的實體對像
    * @since 2011/09/01 1.0
    */
   public List<T> getResultList() {
@@ -31,8 +31,8 @@ public class QueryResult<T> {
   }
   
   /**
-   * 获取总共有好多条记录
-   * @return 满足条件的记录数
+   * 獲取總共有好多條記錄
+   * @return 滿足條件的記錄數
    * @since 2011/09/01 1.0
    */
   public long getTotalRecord() {
