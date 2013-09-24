@@ -1,15 +1,9 @@
 package org.luke.ct.model;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Random;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiSerializationProperty;
@@ -17,7 +11,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 @PersistenceCapable(detachable = "true")
-public class CarPhoneRandomNumber {
+public class CarPhoneRelation {
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
   @ApiSerializationProperty(ignored = AnnotationBoolean.TRUE)
@@ -27,21 +21,13 @@ public class CarPhoneRandomNumber {
   @Persistent
   private String carID;
   @Persistent
-  private String randomID;
+  private String phoneID;
   @Persistent
-  private String deadTime;
+  private String addTime;
+  @Persistent
+  private String modTime;
 
-  public CarPhoneRandomNumber() {
-    // 產生隨機數
-    Random rand = new Random(System.currentTimeMillis());
-    Long randLong = (long) (rand.nextDouble() * 100000000);
-    randomID = "" + randLong;
-    randomID = StringUtils.leftPad(randomID, 8, "0");
-
-    // 設定過期時間為5分鐘
-    Calendar deadCal = Calendar.getInstance();
-    deadCal.add(Calendar.MINUTE, 5);
-    deadTime = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(deadCal.getTime());
+  public CarPhoneRelation() {
   }
 
   public Key getKey() {
@@ -64,11 +50,28 @@ public class CarPhoneRandomNumber {
     this.carID = carID;
   }
 
-  public String getRandomID() {
-    return randomID;
+  public String getPhoneID() {
+    return phoneID;
   }
 
-  public String getDeadTime() {
-    return deadTime;
+  public void setPhoneID(String phoneID) {
+    this.phoneID = phoneID;
   }
+
+  public String getAddTime() {
+    return addTime;
+  }
+
+  public void setAddTime(String addTime) {
+    this.addTime = addTime;
+  }
+
+  public String getModTime() {
+    return modTime;
+  }
+
+  public void setModTime(String modTime) {
+    this.modTime = modTime;
+  }
+
 }
