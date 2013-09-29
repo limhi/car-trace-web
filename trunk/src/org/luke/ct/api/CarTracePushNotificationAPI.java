@@ -3,6 +3,7 @@ package org.luke.ct.api;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
@@ -42,6 +43,7 @@ public class CarTracePushNotificationAPI {
   private static PhoneCarPushNotificationService pcpn_service = new PhoneCarPushNotificationServiceImpl();
   private static PushNotificationMessageService pnm_service = new PushNotificationMessageServiceImpl();
   private static final Logger log = Logger.getLogger(CarTracePushNotificationAPI.class.getName());
+  private static final TimeZone TAIPEI = TimeZone.getTimeZone("GMT+08:00");
 
   @ApiMethod(name = "cppn.list", httpMethod = HttpMethod.GET)
   public List<CarPhonePushNotification> getCarPhonePushNotificationList() {
@@ -82,7 +84,7 @@ public class CarTracePushNotificationAPI {
       throw new Error("提供的訊息內容中，type或message錯誤");
     // 正確的儲存push notification
     PushNotificationMessage pnm = new PushNotificationMessage();
-    pnm.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance().getTime()));
+    pnm.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
     pnm.setType(type);
     pnm.setMessage(message);
     pnm_service.add(pnm);
@@ -91,7 +93,7 @@ public class CarTracePushNotificationAPI {
     retJson.put("messageID", pnm.getEncodedKey());
     for (CarPhoneRelation o : cpr_list) {
       CarPhonePushNotification cppn = new CarPhonePushNotification();
-      cppn.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance().getTime()));
+      cppn.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
       cppn.setCarID(carID);
       cppn.setPhoneID(o.getPhoneID());
       cppn.setIsSend(false);
@@ -108,7 +110,7 @@ public class CarTracePushNotificationAPI {
 
     return retJson;
   }
-  
+
   @ApiMethod(name = "pcpn.merge", httpMethod = HttpMethod.POST)
   public JSONObject postPCPushNotification(@Named("phoneID") String phoneID, JSONObject json) {
     JSONObject retJson = null;
@@ -133,7 +135,7 @@ public class CarTracePushNotificationAPI {
       throw new Error("提供的訊息內容中，type或message錯誤");
     // 正確的儲存push notification
     PushNotificationMessage pnm = new PushNotificationMessage();
-    pnm.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance().getTime()));
+    pnm.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
     pnm.setType(type);
     pnm.setMessage(message);
     pnm_service.add(pnm);
@@ -142,7 +144,7 @@ public class CarTracePushNotificationAPI {
     retJson.put("messageID", pnm.getEncodedKey());
     for (CarPhoneRelation o : cpr_list) {
       PhoneCarPushNotification pcpn = new PhoneCarPushNotification();
-      pcpn.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance().getTime()));
+      pcpn.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
       pcpn.setCarID(o.getCarID());
       pcpn.setPhoneID(phoneID);
       pcpn.setIsSend(false);
