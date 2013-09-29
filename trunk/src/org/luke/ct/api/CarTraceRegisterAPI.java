@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.luke.ct.core.CTCommon;
 import org.luke.ct.core.QueryResult;
 import org.luke.ct.dao.CarRegService;
 import org.luke.ct.dao.CarRegServiceImpl;
@@ -27,7 +28,6 @@ public class CarTraceRegisterAPI {
   private static CarRegService cr_service = new CarRegServiceImpl();
   private static PhoneRegService pr_service = new PhoneRegServiceImpl();
   private static final Logger log = Logger.getLogger(CarTraceRegisterAPI.class.getName());
-  private static final TimeZone TAIPEI = TimeZone.getTimeZone("GMT+08:00");
 
   @ApiMethod(name = "creg", httpMethod = HttpMethod.GET)
   public CarReg getCarRegister(@Named("id") String id) {
@@ -51,7 +51,7 @@ public class CarTraceRegisterAPI {
     CarReg retCR = null;
     // check deviceID, appVersion
     if (StringUtils.isNotBlank(cr.getDeviceID()) && StringUtils.isNotBlank(cr.getAppVersion())) {
-      String dateStr = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime());
+      String dateStr = CTCommon.getNowTime();
       String filter = String.format("deviceID=='%s' && appVersion=='%s'", cr.getDeviceID(), cr.getAppVersion());
       QueryResult<CarReg> qr = cr_service.getPaginationData(filter);
       // 第一次註冊，新增資料
@@ -103,7 +103,7 @@ public class CarTraceRegisterAPI {
     PhoneReg retPR = null;
     // check deviceID, appVersion
     if (StringUtils.isNotBlank(cr.getDeviceID()) && StringUtils.isNotBlank(cr.getAppVersion())) {
-      String dateStr = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime());
+      String dateStr = CTCommon.getNowTime();
       String filter = String.format("deviceID=='%s' && appVersion=='%s'", cr.getDeviceID(), cr.getAppVersion());
       QueryResult<PhoneReg> qr = pr_service.getPaginationData(filter);
       // 第一次註冊，新增資料
