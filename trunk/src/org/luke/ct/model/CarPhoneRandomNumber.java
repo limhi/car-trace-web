@@ -2,7 +2,6 @@ package org.luke.ct.model;
 
 import java.util.Calendar;
 import java.util.Random;
-import java.util.TimeZone;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -34,13 +33,13 @@ public class CarPhoneRandomNumber {
 
 
   public CarPhoneRandomNumber() {
-    // ²£¥ÍÀH¾÷¼Æ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½ï¿½
     Random rand = new Random(System.currentTimeMillis());
     Long randLong = (long) (rand.nextDouble() * 100000000);
     randomID = "" + randLong;
     randomID = StringUtils.leftPad(randomID, 8, "0");
 
-    // ³]©w¹L´Á®É¶¡¬°5¤ÀÄÁ
+    // ï¿½]ï¿½wï¿½Lï¿½ï¿½ï¿½É¶ï¿½ï¿½ï¿½5ï¿½ï¿½ï¿½ï¿½
     deadTime = CTCommon.getDeadTime(Calendar.MINUTE, 5);
   }
 
