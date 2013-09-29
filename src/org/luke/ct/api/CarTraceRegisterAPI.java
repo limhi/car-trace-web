@@ -1,9 +1,6 @@
 package org.luke.ct.api;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import javax.inject.Named;

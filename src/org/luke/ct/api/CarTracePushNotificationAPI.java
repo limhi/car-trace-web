@@ -1,9 +1,6 @@
 package org.luke.ct.api;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
@@ -63,26 +60,26 @@ public class CarTracePushNotificationAPI {
   @ApiMethod(name = "cppn.merge", httpMethod = HttpMethod.POST)
   public JSONObject postCPPushNotification(@Named("carID") String carID, JSONObject json) {
     JSONObject retJson = null;
-    // ÀË¬dcarID¬O§_¦Xªk
+    // ï¿½Ë¬dcarIDï¿½Oï¿½_ï¿½Xï¿½k
     CarReg cr = cr_service.getDataByID(carID);
     if (null == cr)
-      throw new Error("¸ÓcarID©|¥¼µù¥U");
+      throw new Error("ï¿½ï¿½carIDï¿½|ï¿½ï¿½ï¿½ï¿½U");
 
-    // §ä¥X©M¸ÓcarID³sµ²ªºphoneID list
+    // ï¿½ï¿½Xï¿½Mï¿½ï¿½carIDï¿½sï¿½ï¿½ï¿½ï¿½phoneID list
     String filter = String.format("carID=='%s'", carID);
     List<CarPhoneRelation> cpr_list = cpr_service.getPaginationData(filter).getResultList();
     if (null == cpr_list || cpr_list.size() == 0)
-      throw new Error("¸ÓcarID©|¥¼¦³°t¹ïªºphone");
+      throw new Error("ï¿½ï¿½carIDï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ïªºphone");
 
-    // ÀË¬dpush notification ¬O§_¦³ type ©M message
+    // ï¿½Ë¬dpush notification ï¿½Oï¿½_ï¿½ï¿½ type ï¿½M message
     if (null == json || null == json.getString("type") || null == json.getString("message"))
-      throw new Error("´£¨Ñªº°T®§¤º®e®æ¦¡¤£¥¿½T");
+      throw new Error("ï¿½ï¿½ï¿½Ñªï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½eï¿½æ¦¡ï¿½ï¿½ï¿½ï¿½ï¿½T");
 
     String type = json.getString("type");
     String message = json.getString("message");
     if (StringUtils.isBlank(type) || StringUtils.isBlank(message))
-      throw new Error("´£¨Ñªº°T®§¤º®e¤¤¡Atype©Îmessage¿ù»~");
-    // ¥¿½TªºÀx¦spush notification
+      throw new Error("ï¿½ï¿½ï¿½Ñªï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½Atypeï¿½ï¿½messageï¿½ï¿½~");
+    // ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½xï¿½spush notification
     PushNotificationMessage pnm = new PushNotificationMessage();
     pnm.setAddTime(CTCommon.getNowTime());
     pnm.setType(type);
@@ -114,26 +111,26 @@ public class CarTracePushNotificationAPI {
   @ApiMethod(name = "pcpn.merge", httpMethod = HttpMethod.POST)
   public JSONObject postPCPushNotification(@Named("phoneID") String phoneID, JSONObject json) {
     JSONObject retJson = null;
-    // ÀË¬dphoneID¬O§_¦Xªk
+    // ï¿½Ë¬dphoneIDï¿½Oï¿½_ï¿½Xï¿½k
     PhoneReg pr = pr_service.getDataByID(phoneID);
     if (null == pr)
-      throw new Error("¸ÓphoneID©|¥¼µù¥U");
+      throw new Error("ï¿½ï¿½phoneIDï¿½|ï¿½ï¿½ï¿½ï¿½U");
 
-    // §ä¥X©M¸ÓphoneID³sµ²ªºcarID list
+    // ï¿½ï¿½Xï¿½Mï¿½ï¿½phoneIDï¿½sï¿½ï¿½ï¿½ï¿½carID list
     String filter = String.format("phoneID=='%s'", phoneID);
     List<CarPhoneRelation> cpr_list = cpr_service.getPaginationData(filter).getResultList();
     if (null == cpr_list || cpr_list.size() == 0)
-      throw new Error("¸ÓphoneID©|¥¼¦³°t¹ïªºphone");
+      throw new Error("ï¿½ï¿½phoneIDï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ïªºphone");
 
-    // ÀË¬dpush notification ¬O§_¦³ type ©M message
+    // ï¿½Ë¬dpush notification ï¿½Oï¿½_ï¿½ï¿½ type ï¿½M message
     if (null == json || null == json.getString("type") || null == json.getString("message"))
-      throw new Error("´£¨Ñªº°T®§¤º®e®æ¦¡¤£¥¿½T");
+      throw new Error("ï¿½ï¿½ï¿½Ñªï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½eï¿½æ¦¡ï¿½ï¿½ï¿½ï¿½ï¿½T");
 
     String type = json.getString("type");
     String message = json.getString("message");
     if (StringUtils.isBlank(type) || StringUtils.isBlank(message))
-      throw new Error("´£¨Ñªº°T®§¤º®e¤¤¡Atype©Îmessage¿ù»~");
-    // ¥¿½TªºÀx¦spush notification
+      throw new Error("ï¿½ï¿½ï¿½Ñªï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½Atypeï¿½ï¿½messageï¿½ï¿½~");
+    // ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½xï¿½spush notification
     PushNotificationMessage pnm = new PushNotificationMessage();
     pnm.setAddTime(CTCommon.getNowTime());
     pnm.setType(type);
