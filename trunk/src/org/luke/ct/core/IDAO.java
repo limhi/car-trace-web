@@ -1,8 +1,5 @@
 package org.luke.ct.core;
 
-import java.util.List;
-
-import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 
 /**
