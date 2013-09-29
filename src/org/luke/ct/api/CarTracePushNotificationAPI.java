@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.luke.ct.core.CTCommon;
 import org.luke.ct.dao.CarPhonePushNotificationService;
 import org.luke.ct.dao.CarPhonePushNotificationServiceImpl;
 import org.luke.ct.dao.CarPhoneRelationService;
@@ -43,7 +44,6 @@ public class CarTracePushNotificationAPI {
   private static PhoneCarPushNotificationService pcpn_service = new PhoneCarPushNotificationServiceImpl();
   private static PushNotificationMessageService pnm_service = new PushNotificationMessageServiceImpl();
   private static final Logger log = Logger.getLogger(CarTracePushNotificationAPI.class.getName());
-  private static final TimeZone TAIPEI = TimeZone.getTimeZone("GMT+08:00");
 
   @ApiMethod(name = "cppn.list", httpMethod = HttpMethod.GET)
   public List<CarPhonePushNotification> getCarPhonePushNotificationList() {
@@ -84,7 +84,7 @@ public class CarTracePushNotificationAPI {
       throw new Error("提供的訊息內容中，type或message錯誤");
     // 正確的儲存push notification
     PushNotificationMessage pnm = new PushNotificationMessage();
-    pnm.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
+    pnm.setAddTime(CTCommon.getNowTime());
     pnm.setType(type);
     pnm.setMessage(message);
     pnm_service.add(pnm);
@@ -93,7 +93,7 @@ public class CarTracePushNotificationAPI {
     retJson.put("messageID", pnm.getEncodedKey());
     for (CarPhoneRelation o : cpr_list) {
       CarPhonePushNotification cppn = new CarPhonePushNotification();
-      cppn.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
+      cppn.setAddTime(CTCommon.getNowTime());
       cppn.setCarID(carID);
       cppn.setPhoneID(o.getPhoneID());
       cppn.setIsSend(false);
@@ -135,7 +135,7 @@ public class CarTracePushNotificationAPI {
       throw new Error("提供的訊息內容中，type或message錯誤");
     // 正確的儲存push notification
     PushNotificationMessage pnm = new PushNotificationMessage();
-    pnm.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
+    pnm.setAddTime(CTCommon.getNowTime());
     pnm.setType(type);
     pnm.setMessage(message);
     pnm_service.add(pnm);
@@ -144,7 +144,7 @@ public class CarTracePushNotificationAPI {
     retJson.put("messageID", pnm.getEncodedKey());
     for (CarPhoneRelation o : cpr_list) {
       PhoneCarPushNotification pcpn = new PhoneCarPushNotification();
-      pcpn.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
+      pcpn.setAddTime(CTCommon.getNowTime());
       pcpn.setCarID(o.getCarID());
       pcpn.setPhoneID(phoneID);
       pcpn.setIsSend(false);

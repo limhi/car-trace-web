@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Named;
 
+import org.luke.ct.core.CTCommon;
 import org.luke.ct.dao.CarPhoneRandomNumberService;
 import org.luke.ct.dao.CarPhoneRandomNumberServiceImpl;
 import org.luke.ct.dao.CarPhoneRelationService;
@@ -34,7 +35,6 @@ public class CarTraceMatchAPI {
   private static CarPhoneRandomNumberService cprn_service = new CarPhoneRandomNumberServiceImpl();
   private static CarPhoneRelationService cpr_service = new CarPhoneRelationServiceImpl();
   private static final Logger log = Logger.getLogger(CarTraceMatchAPI.class.getName());
-  private static final TimeZone TAIPEI = TimeZone.getTimeZone("GMT+08:00");
 
   @ApiMethod(name = "cprandom.list", httpMethod = HttpMethod.GET)
   public List<CarPhoneRandomNumber> getCarPhoneRandomNumberList() {
@@ -50,7 +50,7 @@ public class CarTraceMatchAPI {
   public CarPhoneRandomNumber postCPRNMerge(@Named("carID") String carID) {
     // 設定5/100的機率下，會去清除過期的資料
     Random random = new Random(System.currentTimeMillis());
-    if (random.nextDouble() < 0.05)
+    if (random.nextDouble() < 1)
       CleanOutOfDate();
 
     CarReg cr = cr_service.getDataByID(carID);
@@ -118,7 +118,7 @@ public class CarTraceMatchAPI {
         if (null != cpr_list && cpr_list.size() == 1) {
           // 更新記錄
           cpr = cpr_list.get(0);
-          cpr.setModTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
+          cpr.setModTime(CTCommon.getNowTime());
           cpr_service.modify(cpr);
         }
         // 未曾配對成功過
@@ -127,7 +127,7 @@ public class CarTraceMatchAPI {
           cpr = new CarPhoneRelation();
           cpr.setCarID(carID);
           cpr.setPhoneID(phoneID);
-          cpr.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
+          cpr.setAddTime(CTCommon.getNowTime());
           cpr_service.add(cpr);
         }
         return cpr;
@@ -142,7 +142,7 @@ public class CarTraceMatchAPI {
   private void CleanOutOfDate() {
     log.info("試著清除過期的資料");
     int count = 1;
-    String dateStr = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime());
+    String dateStr = CTCommon.getNowTime();
     String filter = String.format("deadTime<='%s'", dateStr);
     do {
       List<CarPhoneRandomNumber> list = cprn_service.getPaginationData(filter).getResultList();
