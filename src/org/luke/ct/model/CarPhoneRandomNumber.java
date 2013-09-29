@@ -3,6 +3,7 @@ package org.luke.ct.model;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.TimeZone;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -31,6 +32,8 @@ public class CarPhoneRandomNumber {
   @Persistent
   private String deadTime;
 
+  private static final TimeZone TAIPEI = TimeZone.getTimeZone("GMT+08:00");
+
   public CarPhoneRandomNumber() {
     // 產生隨機數
     Random rand = new Random(System.currentTimeMillis());
@@ -39,7 +42,7 @@ public class CarPhoneRandomNumber {
     randomID = StringUtils.leftPad(randomID, 8, "0");
 
     // 設定過期時間為5分鐘
-    Calendar deadCal = Calendar.getInstance();
+    Calendar deadCal = Calendar.getInstance(TAIPEI);
     deadCal.add(Calendar.MINUTE, 5);
     deadTime = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(deadCal.getTime());
   }
