@@ -45,22 +45,22 @@ public class CarTraceMatchAPI {
 
   @ApiMethod(name = "cprandom.merge", httpMethod = HttpMethod.POST)
   public CarPhoneRandomNumber postCPRNMerge(@Named("carID") String carID) {
-    // ï¿½]ï¿½w5/100ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Uï¿½Aï¿½|ï¿½hï¿½Mï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    // ³]©w5/100ªº¾÷²v¤U¡A·|¥h²M°£¹L´Áªº¸ê®Æ
     Random random = new Random(System.currentTimeMillis());
     if (random.nextDouble() < 1)
       CleanOutOfDate();
 
     CarReg cr = cr_service.getDataByID(carID);
-    // ï¿½ï¿½carIDï¿½wï¿½ï¿½U
+    // ¸ÓcarID¤wµù¥U
     if (null != cr) {
-      log.info("ï¿½ï¿½carIDï¿½wï¿½ï¿½U");
+      log.info("¸ÓcarID¤wµù¥U");
       String filter = String.format("carID=='%s'", carID);
       List<CarPhoneRandomNumber> list = cprn_service.getPaginationData(filter, "deadTime desc").getResultList();
       if (null != list && list.size() > 0) {
-        log.info("ï¿½ï¿½CarPhoneRandomNumberï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½");
+        log.info("¸ÓCarPhoneRandomNumber©|¥¼¨ì´Á");
         return list.get(0);
       } else {
-        // ï¿½ï¿½ï¿½Ë¬dï¿½Oï¿½_ï¿½ï¿½ï¿½Û¦Pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // ¥ýÀË¬d¬O§_¦³¬Û¦PªºÃöµ²
         boolean notOnly = true;
         CarPhoneRandomNumber cprn = null;
         int count = 0;
@@ -71,56 +71,56 @@ public class CarTraceMatchAPI {
           list = cprn_service.getPaginationData(filter, "deadTime desc").getResultList();
           if (null == list || list.size() == 0) {
             cprn_service.add(cprn);
-            log.info("ï¿½ï¿½ï¿½Í·sï¿½ï¿½CarPhoneRandomNumber:" + JSON.toJSONString(cprn));
+            log.info("²£¥Í·sªºCarPhoneRandomNumber:" + JSON.toJSONString(cprn));
             notOnly = false;
           }
-        } while (notOnly && (count++) <= 3);// ï¿½Ì¦hï¿½uï¿½Õ¤Tï¿½ï¿½
+        } while (notOnly && (count++) <= 3);// ³Ì¦h¥u¸Õ¤T¦¸
         return cprn;
       }
     } else {
-      throw new Error("ï¿½|ï¿½ï¿½ï¿½ï¿½U");
+      throw new Error("©|¥¼µù¥U");
     }
   }
 
   @ApiMethod(name = "cprandom.match", httpMethod = HttpMethod.POST)
   public CarPhoneRelation postCPRNMatch(@Named("phoneID") String phoneID, @Named("randomID") String randomID) {
-    // ï¿½]ï¿½w5/100ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Uï¿½Aï¿½|ï¿½hï¿½Mï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    // ³]©w5/100ªº¾÷²v¤U¡A·|¥h²M°£¹L´Áªº¸ê®Æ
     Random random = new Random(System.currentTimeMillis());
     if (random.nextDouble() < 0.05)
       CleanOutOfDate();
 
     PhoneReg pr = pr_service.getDataByID(phoneID);
-    // ï¿½ï¿½phoneIDï¿½wï¿½ï¿½U
+    // ¸ÓphoneID¤wµù¥U
     if (null != pr) {
-      log.info("ï¿½ï¿½phoneIDï¿½wï¿½ï¿½U:" + phoneID);
-      log.info("ï¿½Ï¥ï¿½randomIDï¿½iï¿½ï¿½sï¿½ï¿½:" + randomID);
+      log.info("¸ÓphoneID¤wµù¥U:" + phoneID);
+      log.info("¨Ï¥ÎrandomID¶i¦æ³sµ²:" + randomID);
       String filter = String.format("randomID=='%s'", randomID);
       List<CarPhoneRandomNumber> list = cprn_service.getPaginationData(filter, "deadTime desc").getResultList();
       if (null != list && list.size() > 0) {
-        log.info("ï¿½ï¿½ï¿½tï¿½ïªºrandomID:" + randomID);
+        log.info("§ä¨ì°t¹ïªºrandomID:" + randomID);
         CarPhoneRandomNumber cprn = list.get(0);
         String carID = cprn.getCarID();
 
-        // ï¿½Mï¿½ï¿½ï¿½Ï¥Î¶Ã¼Æ°tï¿½ïªºï¿½Oï¿½ï¿½
+        // ²M°£¨Ï¥Î¶Ã¼Æ°t¹ïªº°O¿ý
         cprn_service.delete(cprn.getKey());
 
         filter = String.format("phoneID=='%s' && carID=='%s'", phoneID, carID);
         List<CarPhoneRelation> cpr_list = cpr_service.getPaginationData(filter).getResultList();
         CarPhoneRelation cpr = null;
         if (null != cpr_list && cpr_list.size() > 1) {
-          throw new Error("ï¿½sï¿½ï¿½ï¿½ï¿½Æ²ï¿½ï¿½`:carID:" + carID + ", phoneID=" + phoneID);
+          throw new Error("³sµ²¸ê®Æ²§±`:carID:" + carID + ", phoneID=" + phoneID);
         }
 
-        // ï¿½ï¿½ï¿½gï¿½tï¿½ï¦¨ï¿½\ï¿½L
+        // ´¿¸g°t¹ï¦¨¥\¹L
         if (null != cpr_list && cpr_list.size() == 1) {
-          // ï¿½ï¿½sï¿½Oï¿½ï¿½
+          // §ó·s°O¿ý
           cpr = cpr_list.get(0);
           cpr.setModTime(CTCommon.getNowTime());
           cpr_service.modify(cpr);
         }
-        // ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¦¨ï¿½\ï¿½L
+        // ¥¼´¿°t¹ï¦¨¥\¹L
         else {
-          // ï¿½sï¿½Wï¿½Oï¿½ï¿½
+          // ·s¼W°O¿ý
           cpr = new CarPhoneRelation();
           cpr.setCarID(carID);
           cpr.setPhoneID(phoneID);
@@ -129,15 +129,15 @@ public class CarTraceMatchAPI {
         }
         return cpr;
       } else {
-        throw new Error("ï¿½ä¤£ï¿½ï¿½tï¿½ïªºrandomID:" + randomID);
+        throw new Error("§ä¤£¨ì°t¹ïªºrandomID:" + randomID);
       }
     } else {
-      throw new Error("ï¿½|ï¿½ï¿½ï¿½ï¿½U");
+      throw new Error("©|¥¼µù¥U");
     }
   }
 
   private void CleanOutOfDate() {
-    log.info("ï¿½ÕµÛ²Mï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+    log.info("¸ÕµÛ²M°£¹L´Áªº¸ê®Æ");
     int count = 1;
     String dateStr = CTCommon.getNowTime();
     String filter = String.format("deadTime<='%s'", dateStr);

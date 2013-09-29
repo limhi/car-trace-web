@@ -51,7 +51,7 @@ public class CarTraceRegisterAPI {
       String dateStr = CTCommon.getNowTime();
       String filter = String.format("deviceID=='%s' && appVersion=='%s'", cr.getDeviceID(), cr.getAppVersion());
       QueryResult<CarReg> qr = cr_service.getPaginationData(filter);
-      // ²Ä¤@¦¸µù¥U¡A·s¼W¸ê®Æ
+      // ç¬¬ä¸€æ¬¡è¨»å†Šï¼Œæ–°å¢è³‡æ–™
       if (qr.getTotalRecord() == 0) {
         retCR = new CarReg();
         retCR.setAddTime(dateStr);
@@ -61,7 +61,7 @@ public class CarTraceRegisterAPI {
         retCR.setRegisterID(cr.getRegisterID());
         retCR.setSenderID(cr.getSenderID());
         cr_service.add(retCR);
-        log.info("·s¼W¤@µ§³]³Æµù¥U°O¿ı¡G" + JSON.toJSONString(retCR));
+        log.info("æ–°å¢ä¸€ç­†è¨­å‚™è¨»å†Šè¨˜éŒ„ï¼š" + JSON.toJSONString(retCR));
       } else if (qr.getTotalRecord() == 1) {
         retCR = qr.getResultList().get(0);
         retCR.setAppVersion(cr.getAppVersion());
@@ -70,9 +70,9 @@ public class CarTraceRegisterAPI {
         retCR.setRegisterID(cr.getRegisterID());
         retCR.setSenderID(cr.getSenderID());
         cr_service.modify(retCR);
-        log.info("­×§ï¤@µ§³]³Æµù¥U°O¿ı¡G" + JSON.toJSONString(retCR));
+        log.info("ä¿®æ”¹ä¸€ç­†è¨­å‚™è¨»å†Šè¨˜éŒ„ï¼š" + JSON.toJSONString(retCR));
       } else {
-        log.severe("³]³Æ°O¿ı¼Æ¥Ø²§±`¡A¤£³B²z");
+        log.severe("è¨­å‚™è¨˜éŒ„æ•¸ç›®ç•°å¸¸ï¼Œä¸è™•ç†");
       }
     }
     return retCR;
@@ -103,7 +103,7 @@ public class CarTraceRegisterAPI {
       String dateStr = CTCommon.getNowTime();
       String filter = String.format("deviceID=='%s' && appVersion=='%s'", cr.getDeviceID(), cr.getAppVersion());
       QueryResult<PhoneReg> qr = pr_service.getPaginationData(filter);
-      // ²Ä¤@¦¸µù¥U¡A·s¼W¸ê®Æ
+      // ç¬¬ä¸€æ¬¡è¨»å†Šï¼Œæ–°å¢è³‡æ–™
       if (qr.getTotalRecord() == 0) {
         retPR = new PhoneReg();
         retPR.setAddTime(dateStr);
@@ -113,7 +113,7 @@ public class CarTraceRegisterAPI {
         retPR.setRegisterID(cr.getRegisterID());
         retPR.setSenderID(cr.getSenderID());
         pr_service.add(retPR);
-        log.info("·s¼W¤@µ§¤â¾÷µù¥U°O¿ı¡G" + JSON.toJSONString(retPR));
+        log.info("æ–°å¢ä¸€ç­†æ‰‹æ©Ÿè¨»å†Šè¨˜éŒ„ï¼š" + JSON.toJSONString(retPR));
       } else if (qr.getTotalRecord() == 1) {
         retPR = qr.getResultList().get(0);
         retPR.setAppVersion(cr.getAppVersion());
@@ -122,9 +122,9 @@ public class CarTraceRegisterAPI {
         retPR.setRegisterID(cr.getRegisterID());
         retPR.setSenderID(cr.getSenderID());
         pr_service.modify(retPR);
-        log.info("­×§ï¤@µ§¤â¾÷µù¥U°O¿ı¡G" + JSON.toJSONString(retPR));
+        log.info("ä¿®æ”¹ä¸€ç­†æ‰‹æ©Ÿè¨»å†Šè¨˜éŒ„ï¼š" + JSON.toJSONString(retPR));
       } else {
-        log.severe("¤â¾÷°O¿ı¼Æ¥Ø²§±`¡A¤£³B²z");
+        log.severe("æ‰‹æ©Ÿè¨˜éŒ„æ•¸ç›®ç•°å¸¸ï¼Œä¸è™•ç†");
       }
     }
     return retPR;

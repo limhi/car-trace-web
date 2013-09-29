@@ -60,26 +60,26 @@ public class CarTracePushNotificationAPI {
   @ApiMethod(name = "cppn.merge", httpMethod = HttpMethod.POST)
   public JSONObject postCPPushNotification(@Named("carID") String carID, JSONObject json) {
     JSONObject retJson = null;
-    // �ˬdcarID�O�_�X�k
+    // 檢查carID是否合法
     CarReg cr = cr_service.getDataByID(carID);
     if (null == cr)
-      throw new Error("��carID�|����U");
+      throw new Error("該carID尚未註冊");
 
-    // ��X�M��carID�s����phoneID list
+    // 找出和該carID連結的phoneID list
     String filter = String.format("carID=='%s'", carID);
     List<CarPhoneRelation> cpr_list = cpr_service.getPaginationData(filter).getResultList();
     if (null == cpr_list || cpr_list.size() == 0)
-      throw new Error("��carID�|�����t�諸phone");
+      throw new Error("該carID尚未有配對的phone");
 
-    // �ˬdpush notification �O�_�� type �M message
+    // 檢查push notification 是否有 type 和 message
     if (null == json || null == json.getString("type") || null == json.getString("message"))
-      throw new Error("���Ѫ��T�����e�榡�����T");
+      throw new Error("提供的訊息內容格式不正確");
 
     String type = json.getString("type");
     String message = json.getString("message");
     if (StringUtils.isBlank(type) || StringUtils.isBlank(message))
-      throw new Error("���Ѫ��T�����e���Atype��message��~");
-    // ���T���x�spush notification
+      throw new Error("提供的訊息內容中，type或message錯誤");
+    // 正確的儲存push notification
     PushNotificationMessage pnm = new PushNotificationMessage();
     pnm.setAddTime(CTCommon.getNowTime());
     pnm.setType(type);
@@ -111,26 +111,26 @@ public class CarTracePushNotificationAPI {
   @ApiMethod(name = "pcpn.merge", httpMethod = HttpMethod.POST)
   public JSONObject postPCPushNotification(@Named("phoneID") String phoneID, JSONObject json) {
     JSONObject retJson = null;
-    // �ˬdphoneID�O�_�X�k
+    // 檢查phoneID是否合法
     PhoneReg pr = pr_service.getDataByID(phoneID);
     if (null == pr)
-      throw new Error("��phoneID�|����U");
+      throw new Error("該phoneID尚未註冊");
 
-    // ��X�M��phoneID�s����carID list
+    // 找出和該phoneID連結的carID list
     String filter = String.format("phoneID=='%s'", phoneID);
     List<CarPhoneRelation> cpr_list = cpr_service.getPaginationData(filter).getResultList();
     if (null == cpr_list || cpr_list.size() == 0)
-      throw new Error("��phoneID�|�����t�諸phone");
+      throw new Error("該phoneID尚未有配對的phone");
 
-    // �ˬdpush notification �O�_�� type �M message
+    // 檢查push notification 是否有 type 和 message
     if (null == json || null == json.getString("type") || null == json.getString("message"))
-      throw new Error("���Ѫ��T�����e�榡�����T");
+      throw new Error("提供的訊息內容格式不正確");
 
     String type = json.getString("type");
     String message = json.getString("message");
     if (StringUtils.isBlank(type) || StringUtils.isBlank(message))
-      throw new Error("���Ѫ��T�����e���Atype��message��~");
-    // ���T���x�spush notification
+      throw new Error("提供的訊息內容中，type或message錯誤");
+    // 正確的儲存push notification
     PushNotificationMessage pnm = new PushNotificationMessage();
     pnm.setAddTime(CTCommon.getNowTime());
     pnm.setType(type);
