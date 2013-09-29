@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
@@ -33,10 +34,16 @@ public class CarTraceMatchAPI {
   private static CarPhoneRandomNumberService cprn_service = new CarPhoneRandomNumberServiceImpl();
   private static CarPhoneRelationService cpr_service = new CarPhoneRelationServiceImpl();
   private static final Logger log = Logger.getLogger(CarTraceMatchAPI.class.getName());
+  private static final TimeZone TAIPEI = TimeZone.getTimeZone("GMT+08:00");
 
   @ApiMethod(name = "cprandom.list", httpMethod = HttpMethod.GET)
   public List<CarPhoneRandomNumber> getCarPhoneRandomNumberList() {
-    return cprn_service.getPaginationData(null, "deadTime desc").getResultList();
+    return cprn_service.getPaginationData(null, "addTime desc").getResultList();
+  }
+
+  @ApiMethod(name = "cpr.list", httpMethod = HttpMethod.GET)
+  public List<CarPhoneRelation> getCarPhoneRelationList() {
+    return cpr_service.getPaginationData(null, "modTime desc").getResultList();
   }
 
   @ApiMethod(name = "cprandom.merge", httpMethod = HttpMethod.POST)
@@ -111,7 +118,7 @@ public class CarTraceMatchAPI {
         if (null != cpr_list && cpr_list.size() == 1) {
           // 更新記錄
           cpr = cpr_list.get(0);
-          cpr.setModTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance().getTime()));
+          cpr.setModTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
           cpr_service.modify(cpr);
         }
         // 未曾配對成功過
@@ -120,7 +127,7 @@ public class CarTraceMatchAPI {
           cpr = new CarPhoneRelation();
           cpr.setCarID(carID);
           cpr.setPhoneID(phoneID);
-          cpr.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance().getTime()));
+          cpr.setAddTime(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime()));
           cpr_service.add(cpr);
         }
         return cpr;
@@ -135,7 +142,7 @@ public class CarTraceMatchAPI {
   private void CleanOutOfDate() {
     log.info("試著清除過期的資料");
     int count = 1;
-    String dateStr = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance().getTime());
+    String dateStr = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(Calendar.getInstance(TAIPEI).getTime());
     String filter = String.format("deadTime<='%s'", dateStr);
     do {
       List<CarPhoneRandomNumber> list = cprn_service.getPaginationData(filter).getResultList();
