@@ -4,18 +4,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.luke.ct.core.PMF;
+import org.luke.ct.dao.CarRegService;
+import org.luke.ct.dao.CarRegServiceImpl;
 import org.luke.ct.model.CarReg;
-import org.luke.ct.model.CarRegService;
-import org.luke.ct.model.CarRegServiceImpl;
 
 import com.alibaba.fastjson.JSON;
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 @SuppressWarnings("serial")
