@@ -45,22 +45,22 @@ public class CarTraceMatchAPI {
 
   @ApiMethod(name = "cprandom.merge", httpMethod = HttpMethod.POST)
   public CarPhoneRandomNumber postCPRNMerge(@Named("carID") String carID) {
-    // ³]©w5/100ªº¾÷²v¤U¡A·|¥h²M°£¹L´Áªº¸ê®Æ
+    // è¨­å®š5/100çš„æ©Ÿç‡ä¸‹ï¼Œæœƒå»æ¸…é™¤éæœŸçš„è³‡æ–™
     Random random = new Random(System.currentTimeMillis());
     if (random.nextDouble() < 1)
       CleanOutOfDate();
 
     CarReg cr = cr_service.getDataByID(carID);
-    // ¸ÓcarID¤wµù¥U
+    // è©²carIDå·²è¨»å†Š
     if (null != cr) {
-      log.info("¸ÓcarID¤wµù¥U");
+      log.info("è©²carIDå·²è¨»å†Š");
       String filter = String.format("carID=='%s'", carID);
       List<CarPhoneRandomNumber> list = cprn_service.getPaginationData(filter, "deadTime desc").getResultList();
       if (null != list && list.size() > 0) {
-        log.info("¸ÓCarPhoneRandomNumber©|¥¼¨ì´Á");
+        log.info("è©²CarPhoneRandomNumberå°šæœªåˆ°æœŸ");
         return list.get(0);
       } else {
-        // ¥ıÀË¬d¬O§_¦³¬Û¦PªºÃöµ²
+        // å…ˆæª¢æŸ¥æ˜¯å¦æœ‰ç›¸åŒçš„é—œçµ
         boolean notOnly = true;
         CarPhoneRandomNumber cprn = null;
         int count = 0;
@@ -71,56 +71,56 @@ public class CarTraceMatchAPI {
           list = cprn_service.getPaginationData(filter, "deadTime desc").getResultList();
           if (null == list || list.size() == 0) {
             cprn_service.add(cprn);
-            log.info("²£¥Í·sªºCarPhoneRandomNumber:" + JSON.toJSONString(cprn));
+            log.info("ç”¢ç”Ÿæ–°çš„CarPhoneRandomNumber:" + JSON.toJSONString(cprn));
             notOnly = false;
           }
-        } while (notOnly && (count++) <= 3);// ³Ì¦h¥u¸Õ¤T¦¸
+        } while (notOnly && (count++) <= 3);// æœ€å¤šåªè©¦ä¸‰æ¬¡
         return cprn;
       }
     } else {
-      throw new Error("©|¥¼µù¥U");
+      throw new Error("å°šæœªè¨»å†Š");
     }
   }
 
   @ApiMethod(name = "cprandom.match", httpMethod = HttpMethod.POST)
   public CarPhoneRelation postCPRNMatch(@Named("phoneID") String phoneID, @Named("randomID") String randomID) {
-    // ³]©w5/100ªº¾÷²v¤U¡A·|¥h²M°£¹L´Áªº¸ê®Æ
+    // è¨­å®š5/100çš„æ©Ÿç‡ä¸‹ï¼Œæœƒå»æ¸…é™¤éæœŸçš„è³‡æ–™
     Random random = new Random(System.currentTimeMillis());
     if (random.nextDouble() < 0.05)
       CleanOutOfDate();
 
     PhoneReg pr = pr_service.getDataByID(phoneID);
-    // ¸ÓphoneID¤wµù¥U
+    // è©²phoneIDå·²è¨»å†Š
     if (null != pr) {
-      log.info("¸ÓphoneID¤wµù¥U:" + phoneID);
-      log.info("¨Ï¥ÎrandomID¶i¦æ³sµ²:" + randomID);
+      log.info("è©²phoneIDå·²è¨»å†Š:" + phoneID);
+      log.info("ä½¿ç”¨randomIDé€²è¡Œé€£çµ:" + randomID);
       String filter = String.format("randomID=='%s'", randomID);
       List<CarPhoneRandomNumber> list = cprn_service.getPaginationData(filter, "deadTime desc").getResultList();
       if (null != list && list.size() > 0) {
-        log.info("§ä¨ì°t¹ïªºrandomID:" + randomID);
+        log.info("æ‰¾åˆ°é…å°çš„randomID:" + randomID);
         CarPhoneRandomNumber cprn = list.get(0);
         String carID = cprn.getCarID();
 
-        // ²M°£¨Ï¥Î¶Ã¼Æ°t¹ïªº°O¿ı
+        // æ¸…é™¤ä½¿ç”¨äº‚æ•¸é…å°çš„è¨˜éŒ„
         cprn_service.delete(cprn.getKey());
 
         filter = String.format("phoneID=='%s' && carID=='%s'", phoneID, carID);
         List<CarPhoneRelation> cpr_list = cpr_service.getPaginationData(filter).getResultList();
         CarPhoneRelation cpr = null;
         if (null != cpr_list && cpr_list.size() > 1) {
-          throw new Error("³sµ²¸ê®Æ²§±`:carID:" + carID + ", phoneID=" + phoneID);
+          throw new Error("é€£çµè³‡æ–™ç•°å¸¸:carID:" + carID + ", phoneID=" + phoneID);
         }
 
-        // ´¿¸g°t¹ï¦¨¥\¹L
+        // æ›¾ç¶“é…å°æˆåŠŸé
         if (null != cpr_list && cpr_list.size() == 1) {
-          // §ó·s°O¿ı
+          // æ›´æ–°è¨˜éŒ„
           cpr = cpr_list.get(0);
           cpr.setModTime(CTCommon.getNowTime());
           cpr_service.modify(cpr);
         }
-        // ¥¼´¿°t¹ï¦¨¥\¹L
+        // æœªæ›¾é…å°æˆåŠŸé
         else {
-          // ·s¼W°O¿ı
+          // æ–°å¢è¨˜éŒ„
           cpr = new CarPhoneRelation();
           cpr.setCarID(carID);
           cpr.setPhoneID(phoneID);
@@ -129,15 +129,15 @@ public class CarTraceMatchAPI {
         }
         return cpr;
       } else {
-        throw new Error("§ä¤£¨ì°t¹ïªºrandomID:" + randomID);
+        throw new Error("æ‰¾ä¸åˆ°é…å°çš„randomID:" + randomID);
       }
     } else {
-      throw new Error("©|¥¼µù¥U");
+      throw new Error("å°šæœªè¨»å†Š");
     }
   }
 
   private void CleanOutOfDate() {
-    log.info("¸ÕµÛ²M°£¹L´Áªº¸ê®Æ");
+    log.info("è©¦è‘—æ¸…é™¤éæœŸçš„è³‡æ–™");
     int count = 1;
     String dateStr = CTCommon.getNowTime();
     String filter = String.format("deadTime<='%s'", dateStr);
