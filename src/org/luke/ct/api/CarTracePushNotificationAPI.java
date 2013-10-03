@@ -194,7 +194,7 @@ public class CarTracePushNotificationAPI {
 
 		// 找出和該phoneID連結的message
 		String filter = String.format("phoneID=='%s' && messageID=='%s'",
-				messageID);
+				phoneID, messageID);
 		List<CarPhonePushNotification> cppn_list = cppn_service
 				.getPaginationData(filter).getResultList();
 		if (null == cppn_list || cppn_list.size() == 0)
@@ -285,7 +285,7 @@ public class CarTracePushNotificationAPI {
 			throw new Error("該carID尚未註冊");
 
 		// 找出和該carID連結的message
-		String filter = String.format("carID=='%s' && messageID=='%s'",
+		String filter = String.format("carID=='%s' && messageID=='%s'", carID,
 				messageID);
 		List<CarPhonePushNotification> cppn_list = cppn_service
 				.getPaginationData(filter).getResultList();
