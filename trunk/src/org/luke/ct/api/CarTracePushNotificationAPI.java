@@ -209,7 +209,7 @@ public class CarTracePushNotificationAPI {
 		List<String> carRegIDList = new ArrayList<String>();
 		for (PhoneCarPushNotification o : pcpn_list) {
 			// 判斷是否傳送過
-			if (o.getIsSend()) {
+			if (!o.getIsSend()) {
 				CarReg cr = cr_service.getDataByID(o.getCarID());
 				carRegIDList.add(cr.getRegisterID());
 				o.setIsSend(true);
@@ -301,7 +301,7 @@ public class CarTracePushNotificationAPI {
 		List<String> phoneRegIDList = new ArrayList<String>();
 		for (CarPhonePushNotification o : cppn_list) {
 			// 判斷是否傳送過
-			if (o.getIsSend()) {
+			if (!o.getIsSend()) {
 				PhoneReg pr = pr_service.getDataByID(o.getCarID());
 				phoneRegIDList.add(pr.getRegisterID());
 				o.setIsSend(true);
