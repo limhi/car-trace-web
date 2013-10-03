@@ -195,9 +195,10 @@ public class CarTracePushNotificationAPI {
 		// 找出和該phoneID連結的message
 		String filter = String.format("phoneID=='%s' && messageID=='%s'",
 				phoneID, messageID);
-		List<CarPhonePushNotification> cppn_list = cppn_service
+		List<PhoneCarPushNotification> pcpn_list = pcpn_service
 				.getPaginationData(filter).getResultList();
-		if (null == cppn_list || cppn_list.size() == 0)
+
+		if (null == pcpn_list || pcpn_list.size() == 0)
 			throw new Error("該messageID無法與phoneID對應");
 
 		PushNotificationMessage pnm = pnm_service.getDataByID(messageID);
@@ -206,7 +207,7 @@ public class CarTracePushNotificationAPI {
 
 		// 產生carRegIDList
 		List<String> carRegIDList = new ArrayList<String>();
-		for (CarPhonePushNotification o : cppn_list) {
+		for (PhoneCarPushNotification o : pcpn_list) {
 			// 判斷是否傳送過
 			if (o.getIsSend()) {
 				CarReg cr = cr_service.getDataByID(o.getCarID());
