@@ -18,7 +18,7 @@
 		<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
 		<init-param>
 			<param-name>services</param-name>
-			<param-value>org.luke.ct.api.CarTraceMatchAPI,org.luke.ct.api.CarTracePushNotificationAPI,org.luke.ct.api.CarTraceRegisterAPI,org.luke.ct.test.Greetings</param-value>
+			<param-value>org.luke.ct.api.CarTraceMatchAPI,org.luke.ct.api.CarTracePushNotificationAPI,org.luke.ct.api.CarTraceRegisterAPI,org.luke.ct.api.JustTest,org.luke.ct.test.Greetings</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
