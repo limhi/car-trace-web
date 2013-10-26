@@ -2,7 +2,9 @@ package org.luke.ct.api;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
@@ -28,9 +30,11 @@ import org.luke.ct.model.PhoneCarPushNotification;
 import org.luke.ct.model.PhoneReg;
 import org.luke.ct.model.PushNotificationMessage;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.Message.Builder;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Sender;
 import com.google.api.server.spi.config.Api;
@@ -202,9 +206,11 @@ public class CarTracePushNotificationAPI {
     // 取得message的內容
     String type = pnm.getType();
     String message = pnm.getMessage();
+    Map<String, String> extraMap = new HashMap<String, String>();
+    extraMap.put("type", type);
 
     // Create a GCM sender
-    MulticastResult result = sendMessageToDevice(CTCommon.API_KEY, devices, "test title", message);
+    MulticastResult result = sendMessageToDevice(CTCommon.API_KEY, devices, "test title", message, extraMap);
     retJson = (JSONObject) JSONObject.toJSON(result);
     return retJson;
   }
@@ -232,7 +238,7 @@ public class CarTracePushNotificationAPI {
     for (CarPhonePushNotification o : cppn_list) {
       // 判斷是否傳送過
       if (!o.getIsSend()) {
-        PhoneReg pr = pr_service.getDataByID(o.getCarID());
+        PhoneReg pr = pr_service.getDataByID(o.getPhoneID());
         devices.add(pr.getRegisterID());
         o.setIsSend(true);
         cppn_service.modify(o);
@@ -247,15 +253,27 @@ public class CarTracePushNotificationAPI {
     String type = pnm.getType();
     String message = pnm.getMessage();
 
+    Map<String, String> extraMap = new HashMap<String, String>();
+    extraMap.put("type", type);
     // Create a GCM sender
-    MulticastResult result = sendMessageToDevice(CTCommon.API_KEY, devices, "test title", message);
+    MulticastResult result = sendMessageToDevice(CTCommon.API_KEY, devices, "test title", message, extraMap);
     retJson = (JSONObject) JSONObject.toJSON(result);
     return retJson;
   }
 
   private MulticastResult sendMessageToDevice(String apiKey, List<String> devices, String title, String message) {
+    return sendMessageToDevice(apiKey, devices, title, message, null);
+  }
+
+  private MulticastResult sendMessageToDevice(String apiKey, List<String> devices, String title, String message, Map<String, String> extraMap) {
     Sender sender = new Sender(apiKey);
-    Message gcmMessage = new Message.Builder().addData("title", title).addData("message", message).build();
+    Builder builder = new Message.Builder().addData("title", title).addData("message", message);
+    if (null != extraMap) {
+      for (String key : extraMap.keySet()) {
+        builder.addData(key, extraMap.get(key));
+      }
+    }
+    Message gcmMessage = builder.build();
     MulticastResult result = null;
     try {
       result = sender.send(gcmMessage, devices, 3);

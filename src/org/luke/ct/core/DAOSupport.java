@@ -221,7 +221,7 @@ public class DAOSupport<T> implements IDAO<T> {
   public T getDataByID(Long key) {
     try {
       Key k = KeyFactory.createKey(entityClass.getSimpleName(), key);
-      return getDataByID(key);
+      return getDataByID(k);
     } catch (IllegalArgumentException e) {
       log.severe("Long Key不合法!error:" + e.getMessage());
       return null;
