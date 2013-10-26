@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.luke.ct.core.CTCommon;
 
 import com.google.api.server.spi.config.AnnotationBoolean;
-import com.google.api.server.spi.config.ApiSerializationProperty;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -20,7 +20,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class CarPhoneRandomNumber {
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  @ApiSerializationProperty(ignored = AnnotationBoolean.TRUE)
+  @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
   private Key key;
   @Persistent
   private String encodedKey;
@@ -33,13 +33,11 @@ public class CarPhoneRandomNumber {
 
 
   public CarPhoneRandomNumber() {
-    // �����H����
     Random rand = new Random(System.currentTimeMillis());
     Long randLong = (long) (rand.nextDouble() * 100000000);
     randomID = "" + randLong;
     randomID = StringUtils.leftPad(randomID, 8, "0");
 
-    // �]�w�L���ɶ���5����
     deadTime = CTCommon.getDeadTime(Calendar.MINUTE, 5);
   }
 

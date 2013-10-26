@@ -6,7 +6,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.api.server.spi.config.AnnotationBoolean;
-import com.google.api.server.spi.config.ApiSerializationProperty;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -14,7 +14,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class CarPhonePushNotification {
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  @ApiSerializationProperty(ignored = AnnotationBoolean.TRUE)
+  @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
   private Key key;
   @Persistent
   private String encodedKey;
