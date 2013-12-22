@@ -30,7 +30,6 @@ import org.luke.ct.model.PhoneCarPushNotification;
 import org.luke.ct.model.PhoneReg;
 import org.luke.ct.model.PushNotificationMessage;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.android.gcm.server.Message;
