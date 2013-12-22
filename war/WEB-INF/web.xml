@@ -7,8 +7,24 @@
 		<servlet-name>CarTrace</servlet-name>
 		<url-pattern>/cartrace</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>ImageUpload</servlet-name>
+		<servlet-class>org.luke.ct.api.upload.ImageUploadServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>Serve</servlet-name>
+		<servlet-class>org.luke.ct.api.upload.ServeServlet</servlet-class>
+	</servlet>
 
+	<servlet-mapping>
+		<servlet-name>ImageUpload</servlet-name>
+		<url-pattern>/image_upload</url-pattern>
+	</servlet-mapping>
 
+	<servlet-mapping>
+		<servlet-name>Serve</servlet-name>
+		<url-pattern>/serve</url-pattern>
+	</servlet-mapping>
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
@@ -18,7 +34,7 @@
 		<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
 		<init-param>
 			<param-name>services</param-name>
-			<param-value>org.luke.ct.api.CarTraceMatchAPI,org.luke.ct.api.CarTracePushNotificationAPI,org.luke.ct.api.CarTraceRegisterAPI,org.luke.ct.api.JustTest,org.luke.ct.test.Greetings</param-value>
+			<param-value>org.luke.ct.api.CarTraceMatchAPI,org.luke.ct.api.CarTracePushNotificationAPI,org.luke.ct.api.CarTraceRegisterAPI,org.luke.ct.api.JustTest,org.luke.ct.api.upload.CarTraceImageUploadAPI,org.luke.ct.test.Greetings</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
