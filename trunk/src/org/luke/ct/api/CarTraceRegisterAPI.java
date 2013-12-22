@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.luke.ct.core.CTCommon;
@@ -44,7 +45,7 @@ public class CarTraceRegisterAPI {
   }
 
   @ApiMethod(name = "creg.merge", httpMethod = HttpMethod.POST)
-  public CarReg postCarRegisterMerge(CarReg cr) {
+  public CarReg postCarRegisterMerge(CarReg cr, HttpServletRequest req) {    
     CarReg retCR = null;
     // check deviceID, appVersion
     if (StringUtils.isNotBlank(cr.getDeviceID()) && StringUtils.isNotBlank(cr.getAppVersion())) {
@@ -57,6 +58,7 @@ public class CarTraceRegisterAPI {
         retCR.setAddTime(dateStr);
         retCR.setAppVersion(cr.getAppVersion());
         retCR.setDeviceID(cr.getDeviceID());
+        retCR.setDeviceIP(req.getRemoteAddr());
         retCR.setModTime(dateStr);
         retCR.setRegisterID(cr.getRegisterID());
         retCR.setSenderID(cr.getSenderID());
@@ -66,6 +68,7 @@ public class CarTraceRegisterAPI {
         retCR = qr.getResultList().get(0);
         retCR.setAppVersion(cr.getAppVersion());
         retCR.setDeviceID(cr.getDeviceID());
+        retCR.setDeviceIP(req.getRemoteAddr());
         retCR.setModTime(dateStr);
         retCR.setRegisterID(cr.getRegisterID());
         retCR.setSenderID(cr.getSenderID());
@@ -96,7 +99,7 @@ public class CarTraceRegisterAPI {
   }
 
   @ApiMethod(name = "preg.merge", httpMethod = HttpMethod.POST)
-  public PhoneReg postPhoneRegisterMerge(PhoneReg cr) {
+  public PhoneReg postPhoneRegisterMerge(PhoneReg cr, HttpServletRequest req) {
     PhoneReg retPR = null;
     // check deviceID, appVersion
     if (StringUtils.isNotBlank(cr.getDeviceID()) && StringUtils.isNotBlank(cr.getAppVersion())) {
@@ -109,6 +112,7 @@ public class CarTraceRegisterAPI {
         retPR.setAddTime(dateStr);
         retPR.setAppVersion(cr.getAppVersion());
         retPR.setDeviceID(cr.getDeviceID());
+        retPR.setDeviceIP(req.getRemoteAddr());
         retPR.setModTime(dateStr);
         retPR.setRegisterID(cr.getRegisterID());
         retPR.setSenderID(cr.getSenderID());
@@ -118,6 +122,7 @@ public class CarTraceRegisterAPI {
         retPR = qr.getResultList().get(0);
         retPR.setAppVersion(cr.getAppVersion());
         retPR.setDeviceID(cr.getDeviceID());
+        retPR.setDeviceIP(req.getRemoteAddr());
         retPR.setModTime(dateStr);
         retPR.setRegisterID(cr.getRegisterID());
         retPR.setSenderID(cr.getSenderID());
