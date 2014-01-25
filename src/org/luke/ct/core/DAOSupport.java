@@ -45,7 +45,7 @@ public class DAOSupport<T extends BaseEntity> implements IDAO<T> {
     try {
       // 連同encodeKey一起存起來
       pm.makePersistent(entity);
-      entity.setEncodedKey(entity.getKey());
+      entity.setEncodedKey();
       pm.makePersistent(entity);
       log.info("add entity" + entity.getClass().getName());
     } catch (Exception e) {
