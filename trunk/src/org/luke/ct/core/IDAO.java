@@ -1,5 +1,7 @@
 package org.luke.ct.core;
 
+import org.luke.ct.model.BaseEntity;
+
 import com.google.appengine.api.datastore.Key;
 
 /**
@@ -12,7 +14,7 @@ import com.google.appengine.api.datastore.Key;
  * @param <T>
  *          實體類 entity class
  */
-public interface IDAO<T> {
+public interface IDAO<T extends BaseEntity> {
 
   /**
    * 增加實體

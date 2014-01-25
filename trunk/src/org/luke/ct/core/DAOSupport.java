@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.luke.ct.model.BaseEntity;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -21,7 +23,7 @@ import com.google.appengine.api.datastore.KeyFactory;
  * @param <T>
  *          實體類 entity class
  */
-public class DAOSupport<T> implements IDAO<T> {
+public class DAOSupport<T extends BaseEntity> implements IDAO<T> {
 
   // 獲得當前T的類型
   protected Class<T> entityClass;// = GenericsUtil.getSuperClassGenricType(this.getClass());
@@ -41,6 +43,9 @@ public class DAOSupport<T> implements IDAO<T> {
   public void add(T entity) {
     PersistenceManager pm = PMF.get().getPersistenceManager();
     try {
+      // 連同encodeKey一起存起來
+      pm.makePersistent(entity);
+      entity.setEncodedKey(entity.getKey());
       pm.makePersistent(entity);
       log.info("add entity" + entity.getClass().getName());
     } catch (Exception e) {
