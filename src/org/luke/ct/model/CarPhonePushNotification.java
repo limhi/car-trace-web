@@ -1,23 +1,10 @@
 package org.luke.ct.model;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-
-import com.google.api.server.spi.config.AnnotationBoolean;
-import com.google.api.server.spi.config.ApiResourceProperty;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 
 @PersistenceCapable(detachable = "true")
-public class CarPhonePushNotification {
-  @PrimaryKey
-  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-  private Key key;
-  @Persistent
-  private String encodedKey;
+public class CarPhonePushNotification extends BaseEntity {
   @Persistent
   private String carID;
   @Persistent
@@ -25,25 +12,11 @@ public class CarPhonePushNotification {
   @Persistent
   private String messageID;
   @Persistent
-  private String addTime;
-  @Persistent
   private Boolean isSend = false;
   @Persistent
   private String sendTime;
 
   public CarPhonePushNotification() {
-  }
-
-  public Key getKey() {
-    return key;
-  }
-
-  public void setKey(Key key) {
-    this.key = key;
-  }
-
-  public String getEncodedKey() {
-    return KeyFactory.keyToString(key);
   }
 
   public String getCarID() {
@@ -68,14 +41,6 @@ public class CarPhonePushNotification {
 
   public void setMessageID(String messageID) {
     this.messageID = messageID;
-  }
-
-  public String getAddTime() {
-    return addTime;
-  }
-
-  public void setAddTime(String addTime) {
-    this.addTime = addTime;
   }
 
   public Boolean getIsSend() {

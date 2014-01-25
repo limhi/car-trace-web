@@ -1,23 +1,10 @@
 package org.luke.ct.model;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-
-import com.google.api.server.spi.config.AnnotationBoolean;
-import com.google.api.server.spi.config.ApiResourceProperty;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 
 @PersistenceCapable(detachable = "true")
-public class CarReg {
-  @PrimaryKey
-  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-  private Key key;
-  @Persistent
-  private String encodedKey;
+public class CarReg extends BaseEntity {
   @Persistent
   private String deviceID;
   @Persistent
@@ -28,21 +15,8 @@ public class CarReg {
   private String senderID;
   @Persistent
   private String registerID;
-  @Persistent
-  private String addTime;
-  @Persistent
-  private String modTime;
 
-  public Key getKey() {
-    return key;
-  }
-
-  public void setKey(Key key) {
-    this.key = key;    
-  }
-
-  public String getEncodedKey() {
-    return KeyFactory.keyToString(key);
+  public CarReg() {
   }
 
   public String getDeviceID() {
@@ -84,21 +58,4 @@ public class CarReg {
   public void setRegisterID(String registerID) {
     this.registerID = registerID;
   }
-
-  public String getAddTime() {
-    return addTime;
-  }
-
-  public void setAddTime(String addTime) {
-    this.addTime = addTime;
-  }
-
-  public String getModTime() {
-    return modTime;
-  }
-
-  public void setModTime(String modTime) {
-    this.modTime = modTime;
-  }
-
 }
