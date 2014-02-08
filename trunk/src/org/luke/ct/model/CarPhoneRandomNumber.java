@@ -48,6 +48,7 @@ public class CarPhoneRandomNumber implements BaseEntity {
     this.key = key;
   }
 
+  @Override
   public String getEncodedKey() {
     return encodedKey;
   }

@@ -45,6 +45,7 @@ public class PhoneReg implements BaseEntity {
     return encodedKey;
   }
 
+  @Override
   public void setEncodedKey() {
     this.encodedKey = KeyFactory.keyToString(key);
   }
