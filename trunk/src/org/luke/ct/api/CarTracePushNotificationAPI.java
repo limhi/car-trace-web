@@ -79,19 +79,26 @@ public class CarTracePushNotificationAPI {
     if (null == cpr_list || cpr_list.size() == 0)
       throw new Error("該carID尚未有配對的phone");
 
-    // 檢查push notification 是否有 type 和 message
-    if (null == json || null == json.getString("type") || null == json.getString("message"))
-      throw new Error("提供的訊息內容格式不正確");
+    // 檢查push notification 是否有 title 和 message
+    if (null == json || null == json.getString("title") || null == json.getString("message"))
+      throw new Error("提供的訊息內容字串格式不正確");
 
-    String type = json.getString("type");
+    String title = json.getString("title");
     String message = json.getString("message");
-    if (StringUtils.isBlank(type) || StringUtils.isBlank(message))
-      throw new Error("提供的訊息內容中，type或message錯誤");
+    if (StringUtils.isBlank(title) || StringUtils.isBlank(message))
+      throw new Error("提供的訊息內容中，title 或 message 字串錯誤 !");
+
+    if (null == json.getJSONObject("rowdata"))
+      throw new Error("提供的訊息內容物件格式不正確");
+
+    JSONObject rowdata = json.getJSONObject("rowdata");
+
     // 正確的儲存push notification
     PushNotificationMessage pnm = new PushNotificationMessage();
     pnm.setAddTime(CTCommon.getNowTime());
-    pnm.setType(type);
+    pnm.setTitle(title);
     pnm.setMessage(message);
+    pnm.setRowdata(rowdata.toJSONString());
     pnm_service.add(pnm);
 
     retJson = new JSONObject();
@@ -130,19 +137,26 @@ public class CarTracePushNotificationAPI {
     if (null == cpr_list || cpr_list.size() == 0)
       throw new Error("該phoneID尚未有配對的phone");
 
-    // 檢查push notification 是否有 type 和 message
-    if (null == json || null == json.getString("type") || null == json.getString("message"))
-      throw new Error("提供的訊息內容格式不正確");
+    // 檢查push notification 是否有 title 和 message
+    if (null == json || null == json.getString("title") || null == json.getString("message"))
+      throw new Error("提供的訊息內容字串格式不正確");
 
-    String type = json.getString("type");
+    String title = json.getString("title");
     String message = json.getString("message");
-    if (StringUtils.isBlank(type) || StringUtils.isBlank(message))
-      throw new Error("提供的訊息內容中，type或message錯誤");
+    if (StringUtils.isBlank(title) || StringUtils.isBlank(message))
+      throw new Error("提供的訊息內容中，title 或 message 字串錯誤 !");
+
+    if (null == json.getJSONObject("rowdata"))
+      throw new Error("提供的訊息內容物件格式不正確");
+
+    JSONObject rowdata = json.getJSONObject("rowdata");
+
     // 正確的儲存push notification
     PushNotificationMessage pnm = new PushNotificationMessage();
     pnm.setAddTime(CTCommon.getNowTime());
-    pnm.setType(type);
+    pnm.setTitle(title);
     pnm.setMessage(message);
+    pnm.setRowdata(rowdata.toJSONString());
     pnm_service.add(pnm);
 
     retJson = new JSONObject();
@@ -194,6 +208,7 @@ public class CarTracePushNotificationAPI {
         CarReg cr = cr_service.getDataByID(o.getCarID());
         devices.add(cr.getRegisterID());
         o.setIsSend(true);
+        o.setSendTime(CTCommon.getNowTime());
         pcpn_service.modify(o);
       }
     }
@@ -203,13 +218,14 @@ public class CarTracePushNotificationAPI {
     }
 
     // 取得message的內容
-    String type = pnm.getType();
+    String title = pnm.getTitle();
     String message = pnm.getMessage();
+    String rowdata = pnm.getRowdata();
     Map<String, String> extraMap = new HashMap<String, String>();
-    extraMap.put("type", type);
+    extraMap.put("rowdata", rowdata);
 
     // Create a GCM sender
-    MulticastResult result = sendMessageToDevice(CTCommon.API_KEY, devices, "test title", message, extraMap);
+    MulticastResult result = sendMessageToDevice(CTCommon.API_KEY, devices, title, message, extraMap);
     retJson = (JSONObject) JSONObject.toJSON(result);
     return retJson;
   }
@@ -240,6 +256,7 @@ public class CarTracePushNotificationAPI {
         PhoneReg pr = pr_service.getDataByID(o.getPhoneID());
         devices.add(pr.getRegisterID());
         o.setIsSend(true);
+        o.setSendTime(CTCommon.getNowTime());
         cppn_service.modify(o);
       }
     }
@@ -249,13 +266,14 @@ public class CarTracePushNotificationAPI {
     }
 
     // 取得message的內容
-    String type = pnm.getType();
+    String title = pnm.getTitle();
     String message = pnm.getMessage();
-
+    String rowdata = pnm.getRowdata();
     Map<String, String> extraMap = new HashMap<String, String>();
-    extraMap.put("type", type);
+    extraMap.put("rowdata", rowdata);
+
     // Create a GCM sender
-    MulticastResult result = sendMessageToDevice(CTCommon.API_KEY, devices, "test title", message, extraMap);
+    MulticastResult result = sendMessageToDevice(CTCommon.API_KEY, devices, title, message, extraMap);
     retJson = (JSONObject) JSONObject.toJSON(result);
     return retJson;
   }
