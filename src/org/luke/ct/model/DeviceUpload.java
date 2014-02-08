@@ -19,7 +19,7 @@ public class DeviceUpload implements BaseEntity {
   @Persistent
   private String encodedKey;
   @Persistent
-  private String carID;
+  private String devID;
   @Persistent
   private String blob_key;
   @Persistent
@@ -46,12 +46,12 @@ public class DeviceUpload implements BaseEntity {
     this.encodedKey = KeyFactory.keyToString(key);
   }
 
-  public String getCarID() {
-    return carID;
+  public String getDevID() {
+    return devID;
   }
 
-  public void setCarID(String carID) {
-    this.carID = carID;
+  public void setDevID(String devID) {
+    this.devID = devID;
   }
 
   public String getBlob_key() {
