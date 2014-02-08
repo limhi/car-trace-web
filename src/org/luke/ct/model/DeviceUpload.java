@@ -11,7 +11,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 @PersistenceCapable(detachable = "true")
-public class CarUpload implements BaseEntity {
+public class DeviceUpload implements BaseEntity {
   @PrimaryKey
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
   @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
