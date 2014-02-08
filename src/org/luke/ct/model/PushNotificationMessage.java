@@ -19,9 +19,11 @@ public class PushNotificationMessage implements BaseEntity {
   @Persistent
   private String encodedKey;
   @Persistent
-  private String type;
+  private String title;
   @Persistent
   private String message;
+  @Persistent
+  private String rowdata;
   @Persistent
   private String addTime;
 
@@ -44,12 +46,12 @@ public class PushNotificationMessage implements BaseEntity {
     this.encodedKey = KeyFactory.keyToString(key);
   }
 
-  public String getType() {
-    return type;
+  public String getTitle() {
+    return title;
   }
 
-  public void setType(String type) {
-    this.type = type;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getMessage() {
@@ -58,6 +60,14 @@ public class PushNotificationMessage implements BaseEntity {
 
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  public String getRowdata() {
+    return rowdata;
+  }
+
+  public void setRowdata(String rowdata) {
+    this.rowdata = rowdata;
   }
 
   public String getAddTime() {
