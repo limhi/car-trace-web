@@ -46,6 +46,7 @@ public class PhoneCarPushNotification implements BaseEntity {
     return encodedKey;
   }
 
+  @Override
   public void setEncodedKey() {
     this.encodedKey = KeyFactory.keyToString(key);
   }
