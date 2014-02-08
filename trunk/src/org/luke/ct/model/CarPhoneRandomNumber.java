@@ -33,7 +33,7 @@ public class CarPhoneRandomNumber implements BaseEntity {
 
   public CarPhoneRandomNumber() {
     Random rand = new Random(System.currentTimeMillis());
-    Long randLong = (long) (rand.nextDouble() * 100000000);
+    Long randLong = (long) (rand.nextDouble() * 10000);
     randomID = "" + randLong;
     randomID = StringUtils.leftPad(randomID, 4, "0");
 
