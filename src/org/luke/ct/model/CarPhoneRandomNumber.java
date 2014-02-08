@@ -48,11 +48,11 @@ public class CarPhoneRandomNumber implements BaseEntity {
     this.key = key;
   }
 
-  @Override
   public String getEncodedKey() {
     return encodedKey;
   }
 
+  @Override
   public void setEncodedKey() {
     this.encodedKey = KeyFactory.keyToString(key);
   }
