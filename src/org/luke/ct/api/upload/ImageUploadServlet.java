@@ -11,13 +11,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.luke.ct.core.CTCommon;
 import org.luke.ct.dao.CarRegService;
 import org.luke.ct.dao.CarRegServiceImpl;
+import org.luke.ct.dao.DeviceUploadService;
+import org.luke.ct.dao.DeviceUploadServiceImpl;
 import org.luke.ct.dao.PhoneRegService;
 import org.luke.ct.dao.PhoneRegServiceImpl;
 import org.luke.ct.model.CarReg;
+import org.luke.ct.model.DeviceUpload;
 import org.luke.ct.model.PhoneReg;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
@@ -30,6 +35,7 @@ public class ImageUploadServlet extends HttpServlet {
   private static final long serialVersionUID = -1170774733534547201L;
   private static CarRegService cr_service = new CarRegServiceImpl();
   private static PhoneRegService pr_service = new PhoneRegServiceImpl();
+  private static DeviceUploadService du_service = new DeviceUploadServiceImpl();
   private static final Logger log = Logger.getLogger(ImageUploadServlet.class.getName());
   private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
@@ -40,6 +46,20 @@ public class ImageUploadServlet extends HttpServlet {
       sendError(res, "未提供devID");
       return;
     }
+
+    String mySerialString = req.getParameter("mySerial");
+    Integer mySerial = 0;
+    if (StringUtils.isBlank(mySerialString)) {
+      sendError(res, "未提供mySerial");
+      return;
+    }
+    try {
+      mySerial = Integer.parseInt(mySerialString);
+    } catch (NumberFormatException e) {
+      sendError(res, "mySerial必須是數字");
+      return;
+    }
+
     // 檢查是否為合法的carID
     CarReg cr = cr_service.getDataByID(devID);
     if (null == cr) {
@@ -72,7 +92,16 @@ public class ImageUploadServlet extends HttpServlet {
     json.put("blob_key", blobKey.getKeyString());
     json.put("direct_url", "/serve?blob_key=" + blobKey.getKeyString());
 
-    // TODO 缺少儲存在db的動作
+    // 儲存在db的動作
+
+    DeviceUpload du = new DeviceUpload();
+    du.setDevID(devID);
+    du.setMySerial(mySerial);
+    du.setServing_url(servingUrl);
+    du.setBlob_key(blobKey.getKeyString());
+    du.setAddTime(CTCommon.getNowTime());
+    du_service.add(du);
+    log.info("新增一筆設備註冊記錄：" + JSON.toJSONString(du));
 
     PrintWriter out = res.getWriter();
     out.print(json.toString());
