@@ -21,6 +21,8 @@ public class DeviceUpload implements BaseEntity {
   @Persistent
   private String devID;
   @Persistent
+  private Integer mySerial;
+  @Persistent
   private String blob_key;
   @Persistent
   private String serving_url;
@@ -52,6 +54,14 @@ public class DeviceUpload implements BaseEntity {
 
   public void setDevID(String devID) {
     this.devID = devID;
+  }
+
+  public Integer getMySerial() {
+    return mySerial;
+  }
+
+  public void setMySerial(Integer mySerial) {
+    this.mySerial = mySerial;
   }
 
   public String getBlob_key() {
