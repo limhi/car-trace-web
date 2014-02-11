@@ -66,8 +66,22 @@ public class CarTracePushNotificationAPI {
   }
 
   @ApiMethod(name = "cppn.merge", httpMethod = HttpMethod.POST)
-  public JSONObject postCPPushNotification(@Named("carID") String carID, JSONObject json) {
+  // public JSONObject postCPPushNotification(@Named("carID") String carID, JSONObject json) {
+  public JSONObject postCPPushNotification(JSONObject json) {
     JSONObject retJson = null;
+
+    // 檢查push notification 是否有 title 和 message
+    if (null == json || null == json.getString("carID") || null == json.getString("title") || null == json.getString("message"))
+      throw new Error("提供的訊息內容字串格式不正確");
+
+    String carID = json.getString("carID");
+    String title = json.getString("title");
+    String message = json.getString("message");
+    if (StringUtils.isBlank(carID) || StringUtils.isBlank(title) || StringUtils.isBlank(message))
+      throw new Error("提供的訊息內容中，carID, title 或 message 字串錯誤 !");
+    log.info("get carID = " + carID);
+    System.out.println("get carID = " + carID);
+
     // 檢查carID是否合法
     CarReg cr = cr_service.getDataByID(carID);
     if (null == cr)
@@ -78,15 +92,6 @@ public class CarTracePushNotificationAPI {
     List<CarPhoneRelation> cpr_list = cpr_service.getPaginationData(filter).getResultList();
     if (null == cpr_list || cpr_list.size() == 0)
       throw new Error("該carID尚未有配對的phone");
-
-    // 檢查push notification 是否有 title 和 message
-    if (null == json || null == json.getString("title") || null == json.getString("message"))
-      throw new Error("提供的訊息內容字串格式不正確");
-
-    String title = json.getString("title");
-    String message = json.getString("message");
-    if (StringUtils.isBlank(title) || StringUtils.isBlank(message))
-      throw new Error("提供的訊息內容中，title 或 message 字串錯誤 !");
 
     if (null == json.getJSONObject("rowdata"))
       throw new Error("提供的訊息內容物件格式不正確");
@@ -124,8 +129,25 @@ public class CarTracePushNotificationAPI {
   }
 
   @ApiMethod(name = "pcpn.merge", httpMethod = HttpMethod.POST)
-  public JSONObject postPCPushNotification(@Named("phoneID") String phoneID, JSONObject json) {
+  // public JSONObject postPCPushNotification(@Named("phoneID") String phoneID, JSONObject json) {
+  public JSONObject postPCPushNotification(JSONObject json) {
     JSONObject retJson = null;
+
+    // 檢查push notification 是否有 title 和 message
+    if (null == json || null == json.getString("phoneID") || null == json.getString("carID") || null == json.getString("title")
+        || null == json.getString("message"))
+      throw new Error("提供的訊息內容字串格式不正確");
+
+    String phoneID = json.getString("phoneID");
+    String carID = json.getString("carID");
+    String title = json.getString("title");
+    String message = json.getString("message");
+    if (StringUtils.isBlank(phoneID) || StringUtils.isBlank(carID) || StringUtils.isBlank(title) || StringUtils.isBlank(message))
+      throw new Error("提供的訊息內容中，phoneID, carID, title 或 message 字串錯誤 !");
+
+    System.out.println("get phoneID = " + phoneID);
+    System.out.println("get carID = " + carID);
+
     // 檢查phoneID是否合法
     PhoneReg pr = pr_service.getDataByID(phoneID);
     if (null == pr)
@@ -136,15 +158,6 @@ public class CarTracePushNotificationAPI {
     List<CarPhoneRelation> cpr_list = cpr_service.getPaginationData(filter).getResultList();
     if (null == cpr_list || cpr_list.size() == 0)
       throw new Error("該phoneID尚未有配對的phone");
-
-    // 檢查push notification 是否有 title 和 message
-    if (null == json || null == json.getString("title") || null == json.getString("message"))
-      throw new Error("提供的訊息內容字串格式不正確");
-
-    String title = json.getString("title");
-    String message = json.getString("message");
-    if (StringUtils.isBlank(title) || StringUtils.isBlank(message))
-      throw new Error("提供的訊息內容中，title 或 message 字串錯誤 !");
 
     if (null == json.getJSONObject("rowdata"))
       throw new Error("提供的訊息內容物件格式不正確");
@@ -162,20 +175,22 @@ public class CarTracePushNotificationAPI {
     retJson = new JSONObject();
     retJson.put("messageID", pnm.getEncodedKey());
     for (CarPhoneRelation o : cpr_list) {
-      PhoneCarPushNotification pcpn = new PhoneCarPushNotification();
-      pcpn.setAddTime(CTCommon.getNowTime());
-      pcpn.setCarID(o.getCarID());
-      pcpn.setPhoneID(phoneID);
-      pcpn.setIsSend(false);
-      pcpn.setMessageID(pnm.getEncodedKey());
-      pcpn_service.add(pcpn);
+      if (o.getCarID().equals(carID)) {
+        PhoneCarPushNotification pcpn = new PhoneCarPushNotification();
+        pcpn.setAddTime(CTCommon.getNowTime());
+        pcpn.setCarID(carID);
+        pcpn.setPhoneID(phoneID);
+        pcpn.setIsSend(false);
+        pcpn.setMessageID(pnm.getEncodedKey());
+        pcpn_service.add(pcpn);
 
-      JSONArray carArray = retJson.getJSONArray("carArray");
-      if (null == carArray)
-        carArray = new JSONArray();
+        JSONArray carArray = retJson.getJSONArray("carArray");
+        if (null == carArray)
+          carArray = new JSONArray();
 
-      carArray.add(o.getCarID());
-      retJson.put("carArray", carArray);
+        carArray.add(o.getCarID());
+        retJson.put("carArray", carArray);
+      }
     }
 
     return retJson;
