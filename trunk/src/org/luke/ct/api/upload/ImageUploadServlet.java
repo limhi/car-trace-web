@@ -101,7 +101,7 @@ public class ImageUploadServlet extends HttpServlet {
     du.setBlob_key(blobKey.getKeyString());
     du.setAddTime(CTCommon.getNowTime());
     du_service.add(du);
-    log.info("新增一筆設備註冊記錄：" + JSON.toJSONString(du));
+    log.info("新增一筆設備上傳記錄：" + JSON.toJSONString(du));
 
     PrintWriter out = res.getWriter();
     out.print(json.toString());
