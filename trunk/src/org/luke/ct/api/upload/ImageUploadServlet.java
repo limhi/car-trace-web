@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.luke.ct.api.CarTracePushNotificationAPI;
 import org.luke.ct.core.CTCommon;
 import org.luke.ct.dao.CarRegService;
 import org.luke.ct.dao.CarRegServiceImpl;
@@ -61,10 +62,12 @@ public class ImageUploadServlet extends HttpServlet {
     }
 
     // 檢查是否為合法的carID
-    CarReg cr = cr_service.getDataByID(devID);
+    CarReg cr = null;
+    PhoneReg pr = null;
+    cr = cr_service.getDataByID(devID);
     if (null == cr) {
       // 檢查是否為合法的phoneID
-      PhoneReg pr = pr_service.getDataByID(devID);
+      pr = pr_service.getDataByID(devID);
       if (null == pr) {
         sendError(res, "提供的ID尚未註冊, devID = " + devID);
         return;
@@ -88,12 +91,11 @@ public class ImageUploadServlet extends HttpServlet {
 
     // 二種方式都能存取上傳的圖檔
     JSONObject json = new JSONObject();
-    json.put("serving_url", servingUrl);
-    json.put("blob_key", blobKey.getKeyString());
-    json.put("direct_url", "/serve?blob_key=" + blobKey.getKeyString());
+    // json.put("serving_url", servingUrl);
+    // json.put("blob_key", blobKey.getKeyString());
+    // json.put("direct_url", "/serve?blob_key=" + blobKey.getKeyString());
 
     // 儲存在db的動作
-
     DeviceUpload du = new DeviceUpload();
     du.setDevID(devID);
     du.setMySerial(mySerial);
@@ -102,6 +104,50 @@ public class ImageUploadServlet extends HttpServlet {
     du.setAddTime(CTCommon.getNowTime());
     du_service.add(du);
     log.info("新增一筆設備上傳記錄：" + JSON.toJSONString(du));
+
+    // 直接新增message info到db
+    // 並直接把message content發給相關的devices
+    JSONObject retJson = new JSONObject();
+    CarTracePushNotificationAPI ctpn_api = new CarTracePushNotificationAPI();
+    if (null != cr) {
+      String carID = cr.getEncodedKey();
+      String title = "設備上傳記錄";
+      String message = String.format("設備於%s上傳圖片", du.getAddTime());
+      JSONObject rowdata = new JSONObject();
+      rowdata.put("carID", carID);
+      rowdata.put("addTime", du.getAddTime());
+      JSONObject cpJson = new JSONObject();
+      cpJson.put("carID", carID);
+      cpJson.put("title", title);
+      cpJson.put("message", message);
+      cpJson.put("rowdata", rowdata);
+
+      retJson = ctpn_api.postCPPushNotification(cpJson);
+      String messageID = retJson.getString("messageID");
+      // JSONArray phoneArray = retJson.getJSONArray("phoneArray");
+      retJson = ctpn_api.postCPPushNotificationSend(carID, messageID);
+    } else if (null != pr) {
+      String phoneID = pr.getEncodedKey();
+      String title = "設備上傳記錄";
+      String message = String.format("設備於%s上傳圖片", du.getAddTime());
+      JSONObject rowdata = new JSONObject();
+      rowdata.put("phoneID", phoneID);
+      rowdata.put("addTime", du.getAddTime());
+      JSONObject cpJson = new JSONObject();
+      cpJson.put("phoneID", phoneID);
+      cpJson.put("title", title);
+      cpJson.put("message", message);
+      cpJson.put("rowdata", rowdata);
+
+      retJson = ctpn_api.postPCPushNotification(cpJson);
+      String messageID = retJson.getString("messageID");
+      // JSONArray phoneArray = retJson.getJSONArray("phoneArray");
+      retJson = ctpn_api.postPCPushNotificationSend(phoneID, messageID);
+    }
+
+    json.put("uploadKey", du.getEncodedKey());
+    json.put("addTime", du.getAddTime());
+    json.put("result", retJson);
 
     PrintWriter out = res.getWriter();
     out.print(json.toString());
