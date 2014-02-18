@@ -103,7 +103,8 @@ public class CarTracePushNotificationAPI {
     pnm.setAddTime(CTCommon.getNowTime());
     pnm.setTitle(title);
     pnm.setMessage(message);
-    pnm.setRowdata(rowdata.toJSONString());
+    if (null != rowdata)
+      pnm.setRowdata(rowdata.toJSONString());
     pnm_service.add(pnm);
 
     retJson = new JSONObject();
@@ -169,7 +170,8 @@ public class CarTracePushNotificationAPI {
     pnm.setAddTime(CTCommon.getNowTime());
     pnm.setTitle(title);
     pnm.setMessage(message);
-    pnm.setRowdata(rowdata.toJSONString());
+    if (null != rowdata)
+      pnm.setRowdata(rowdata.toJSONString());
     pnm_service.add(pnm);
 
     retJson = new JSONObject();
